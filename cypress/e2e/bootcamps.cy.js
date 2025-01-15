@@ -1,13 +1,11 @@
+import AddMembers from "../pages/AddMembers";
+import FileSend from "../pages/FileSend";
+import Login from "../pages/Login";
+import NewCrowd from "../pages/NewCrowd";
+import RemoveMember from "../pages/RemoveMember";
+
 describe("Testing Within BootcampsHub", () => {
-  it("Visiting The Site", () => {
-    cy.visit("/");
-
-    cy.get(
-      "#__next > div > div > section.b1 > div.banner_main > div.left_side > div.left_text > h2"
-    ).should("have.text", "One Stop Solution for Trade School & Students");
-  });
-
-  it.only("Logging In, Creating Crowd, Removing Someone, Archiving", () => {
+  it("Logging In, Creating Crowd, Removing Someone, Archiving", () => {
     cy.visit("/");
 
     //Logging In
@@ -129,5 +127,52 @@ describe("Testing Within BootcampsHub", () => {
     cy.get(".text_input_box__input").type("This is an avatar image");
 
     cy.get("button.icon-btn.sent-btn").should("be.visible").click();
+  });
+
+  it.only("Completing Tasks", () => {
+    const login = new Login();
+    const newCrowd = new NewCrowd();
+    const addMembers = new AddMembers();
+    const removeMember = new RemoveMember();
+    const fileSend = new FileSend();
+    const membersToAdd = [
+      { email: "khanshohaibhossain@gmail.com", name: "Shohaib hossain" },
+      { email: "she2farah@gmail.com", name: "Khadija Farah" },
+    ];
+
+    //Logging In
+    cy.fixture("credentials.json").then((data) => {
+      login.login(data.email, data.password);
+    });
+
+    cy.get("#__next > div > div > div.ant-empty-footer > button").click();
+
+    cy.get(
+      "body > div:nth-child(8) > div > div.ant-modal-wrap > div > div:nth-child(1) > div > div.ant-modal-body > div > div > div > ul > li > ul > li > button > span"
+    ).click();
+
+    //Creating New Crowd, Adding a Title and Description
+    newCrowd.createNewCrowd(
+      "Example Crowd",
+      "This is an example test description"
+    );
+
+    //Adding Members
+    // addMembers.addMembers();
+    addMembers.addMember("khanshohaibhossain@gmail.com", "Shohaib hossain");
+    addMembers.addMember("she2farah@gmail.com", "Khadija Farah");
+    cy.get("button.button.primary").eq(1).click();
+
+    //Visiting the Chat
+    cy.visit("https://portal.bootcampshub.ai/chat/677f2007c724cd001a36821c");
+
+    //Removing Someone
+    removeMember.removeMember("Khadija Farah", "Example Crowd");
+
+    //Archiving the Chat Crowd
+    cy.get("button.archive-group").click();
+
+    //Sending a file into the chat along with an associated message
+    fileSend.sendFile("avatar.png", "This is an avatar image");
   });
 });
