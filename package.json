@@ -12,5 +12,8 @@
   "dependencies": {
     "cypress": "^13.17.0",
     "cypress-file-upload": "^5.0.8"
+  },
+  "devDependencies": {
+    "cypress-iframe": "^1.0.1"
   }
 }
