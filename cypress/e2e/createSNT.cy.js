@@ -36,20 +36,14 @@ describe("Verifying the Url", () => {
 
     cy.get("button.ts4u-primary-btn").click({ force: true });
 
-    cy.get("#title").should("be.visible").type("Example SNT");
+    cy.get("#title").should("be.visible").type("Example SNT 2");
 
     cy.get('textarea[placeholder="Enter Agenda"]') // Select the textarea by its placeholder
       .should("be.visible")
       .type("This is an example SNT");
 
     //add a user
-    cy.get(".user_card") // Select all user cards
-      .contains(".user-name", "testsam testsam") // Locate the user card with the specific name
-      .parents(".user_card") // Go up to the parent container (user_card)
-      .find("button.add_Button") // Find the Add button inside that card
-      .scrollIntoView() // Scroll to make the button visible
-      .should("be.visible") // Ensure the button is now visible
-      .click();
+    cy.get(":nth-child(4) > .add_Button").click();
 
     cy.get('button.ud_view_btn[type="submit"]') // Select the Add button by its class and type
       .scrollIntoView() // Scroll to make the button visible
